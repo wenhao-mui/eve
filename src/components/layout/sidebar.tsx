@@ -13,7 +13,8 @@ import {
   FileText,
   Settings,
   HelpCircle,
-  LogOut
+  LogOut,
+  Folder
 } from "lucide-react";
 
 interface SidebarProps {
@@ -25,6 +26,7 @@ const menuItems = [
   { icon: Home, label: 'Dashboard', href: '/', active: true },
   { icon: Users, label: 'Users', href: '/users', active: false },
   { icon: Shield, label: 'Roles', href: '/roles', active: false },
+  { icon: Folder, label: 'Documents', href: '/documents', active: false },
   { icon: Database, label: 'Database', href: '#', active: false },
   { icon: FileText, label: 'Reports', href: '#', active: false },
   { icon: Settings, label: 'Settings', href: '/settings', active: false },
