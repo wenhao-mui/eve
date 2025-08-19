@@ -14,7 +14,8 @@ import {
   Settings,
   HelpCircle,
   LogOut,
-  Folder
+  Folder,
+  CheckSquare
 } from "lucide-react";
 
 interface SidebarProps {
@@ -27,6 +28,7 @@ const menuItems = [
   { icon: Users, label: 'Users', href: '/users', active: false },
   { icon: Shield, label: 'Roles', href: '/roles', active: false },
   { icon: Folder, label: 'Documents', href: '/documents', active: false },
+  { icon: CheckSquare, label: 'Todos', href: '/todos', active: false },
   { icon: Database, label: 'Database', href: '#', active: false },
   { icon: FileText, label: 'Reports', href: '#', active: false },
   { icon: Settings, label: 'Settings', href: '/settings', active: false },
