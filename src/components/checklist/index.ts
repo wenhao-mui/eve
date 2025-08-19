@@ -5,4 +5,6 @@ export { default as ChecklistItem } from './checklist-item';
 export { default as ChecklistUpload } from './checklist-upload';
 export { default as ChecklistInstance } from './checklist-instance';
 export { default as ChecklistInstanceForm } from './checklist-instance-form';
-export { default as ChecklistInstancesList } from './checklist-instances-list'; 
+export { default as ChecklistInstancesList } from './checklist-instances-list';
+export { default as ChecklistReportList } from './checklist-report-list';
+export { default as ChecklistReportDetail } from './checklist-report-detail'; 
