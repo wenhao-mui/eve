@@ -3,134 +3,308 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { 
-  Activity, 
-  Users, 
-  DollarSign, 
-  TrendingUp, 
-  BarChart3, 
+  Fuel, 
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Star,
+  Users,
   Calendar,
-  Target
+  Target,
+  Zap,
+  Shield,
+  Thermometer,
+  Gauge
 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
-// Dummy data for the chart
-const chartData = [
-  { name: 'Jan', users: 1200, revenue: 32000, sessions: 800 },
-  { name: 'Feb', users: 1350, revenue: 38000, sessions: 950 },
-  { name: 'Mar', users: 1500, revenue: 42000, sessions: 1100 },
-  { name: 'Apr', users: 1680, revenue: 48000, sessions: 1250 },
-  { name: 'May', users: 1850, revenue: 52000, sessions: 1400 },
-  { name: 'Jun', users: 2100, revenue: 58000, sessions: 1600 },
-  { name: 'Jul', users: 2350, revenue: 65000, sessions: 1800 },
-  { name: 'Aug', users: 2600, revenue: 72000, sessions: 2000 },
-  { name: 'Sep', users: 2847, revenue: 80000, sessions: 2200 },
+// Fuel usage data
+const fuelData = {
+  ron95: { current: 12500, max: 20000, unit: 'L' },
+  ron97: { current: 8500, max: 15000, unit: 'L' },
+  diesel: { current: 18000, max: 25000, unit: 'L' }
+};
+
+// Rating data
+const ratingData = {
+  overall: 4.6,
+  customerService: 4.8,
+  cleanliness: 4.5,
+  safety: 4.9,
+  fuelQuality: 4.7
+};
+
+// Incident data for last 30 days
+const incidentData = {
+  opened: 12,
+  reported: 8,
+  resolved: 15,
+  pending: 5
+};
+
+// Fuel consumption trend data
+const fuelTrendData = [
+  { date: 'Mon', ron95: 420, ron97: 280, diesel: 600 },
+  { date: 'Tue', ron95: 450, ron97: 310, diesel: 580 },
+  { date: 'Wed', ron95: 480, ron97: 290, diesel: 620 },
+  { date: 'Thu', ron95: 410, ron97: 320, diesel: 590 },
+  { date: 'Fri', ron95: 520, ron97: 350, diesel: 680 },
+  { date: 'Sat', ron95: 580, ron97: 380, diesel: 720 },
+  { date: 'Sun', ron95: 490, ron97: 300, diesel: 650 },
 ];
 
-// Dummy data for the table
-const tableData = [
-  { id: 1, name: 'John Doe', email: 'john.doe@example.com', status: 'Active', role: 'Admin', lastLogin: '2 hours ago', actions: 'Edit' },
-  { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com', status: 'Active', role: 'User', lastLogin: '1 day ago', actions: 'Edit' },
-  { id: 3, name: 'Mike Johnson', email: 'mike.johnson@example.com', status: 'Inactive', role: 'User', lastLogin: '1 week ago', actions: 'Edit' },
-  { id: 4, name: 'Sarah Wilson', email: 'sarah.wilson@example.com', status: 'Active', role: 'Moderator', lastLogin: '3 hours ago', actions: 'Edit' },
-  { id: 5, name: 'David Brown', email: 'david.brown@example.com', status: 'Active', role: 'User', lastLogin: '5 hours ago', actions: 'Edit' },
-  { id: 6, name: 'Lisa Davis', email: 'lisa.davis@example.com', status: 'Pending', role: 'User', lastLogin: 'Never', actions: 'Edit' },
-  { id: 7, name: 'Tom Miller', email: 'tom.miller@example.com', status: 'Active', role: 'User', lastLogin: '2 days ago', actions: 'Edit' },
-  { id: 8, name: 'Emma Wilson', email: 'emma.wilson@example.com', status: 'Active', role: 'Moderator', lastLogin: '1 hour ago', actions: 'Edit' },
+// Revenue data
+const revenueData = [
+  { month: 'Jan', revenue: 125000, fuelSales: 98000, shopSales: 27000 },
+  { month: 'Feb', revenue: 118000, fuelSales: 92000, shopSales: 26000 },
+  { month: 'Mar', revenue: 132000, fuelSales: 105000, shopSales: 27000 },
+  { month: 'Apr', revenue: 128000, fuelSales: 101000, shopSales: 27000 },
+  { month: 'May', revenue: 145000, fuelSales: 115000, shopSales: 30000 },
+  { month: 'Jun', revenue: 138000, fuelSales: 110000, shopSales: 28000 },
 ];
+
+// Recent incidents table data
+const recentIncidents = [
+  { id: 1, type: 'Fuel Spill', severity: 'Medium', status: 'Resolved', date: '2024-01-20', assignedTo: 'John Smith' },
+  { id: 2, type: 'Equipment Malfunction', severity: 'Low', status: 'Pending', date: '2024-01-19', assignedTo: 'Sarah Johnson' },
+  { id: 3, type: 'Safety Violation', severity: 'High', status: 'Investigating', date: '2024-01-18', assignedTo: 'Mike Wilson' },
+  { id: 4, type: 'Customer Complaint', severity: 'Low', status: 'Resolved', date: '2024-01-17', assignedTo: 'Lisa Davis' },
+  { id: 5, type: 'Maintenance Required', severity: 'Medium', status: 'In Progress', date: '2024-01-16', assignedTo: 'David Brown' },
+];
+
+// Safety metrics
+const safetyMetrics = {
+  daysWithoutAccident: 45,
+  safetyAuditScore: 92,
+  emergencyDrills: 3,
+  safetyTrainingHours: 24
+};
 
 export default function DashboardContent() {
+  const getFuelPercentage = (current: number, max: number) => {
+    return Math.round((current / max) * 100);
+  };
+
+
+
+  const getFuelStatusBadge = (percentage: number) => {
+    if (percentage >= 80) return 'Critical';
+    if (percentage >= 60) return 'Warning';
+    return 'Good';
+  };
+
+  const getFuelStatusBadgeVariant = (percentage: number) => {
+    if (percentage >= 80) return 'destructive';
+    if (percentage >= 60) return 'secondary';
+    return 'default';
+  };
+
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       {/* Welcome Section */}
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Welcome back, Admin
+          Welcome back, Station Manager
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
-          Here&apos;s what&apos;s happening with your EVE Portal today.
+          Here&apos;s what&apos;s happening at your petrol station today.
         </p>
       </div>
 
-      {/* Performance Overview Section */}
+      {/* Fuel Usage Overview */}
       <div className="mb-8">
         <Card>
           <CardHeader>
-            <CardTitle>Performance Overview</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Fuel className="h-5 w-5" />
+              Fuel Usage Overview
+            </CardTitle>
             <CardDescription>
-              Key metrics and trends for the last 30 days
+              Current fuel levels and capacity utilization
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">98.7%</div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Uptime</p>
+              {/* RON 95 */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">RON 95</span>
+                  <Badge variant={getFuelStatusBadgeVariant(getFuelPercentage(fuelData.ron95.current, fuelData.ron95.max))}>
+                    {getFuelStatusBadge(getFuelPercentage(fuelData.ron95.current, fuelData.ron95.max))}
+                  </Badge>
+                </div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {fuelData.ron95.current.toLocaleString()} / {fuelData.ron95.max.toLocaleString()} {fuelData.ron95.unit}
+                </div>
+                <Progress 
+                  value={getFuelPercentage(fuelData.ron95.current, fuelData.ron95.max)} 
+                  className="h-2"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {getFuelPercentage(fuelData.ron95.current, fuelData.ron95.max)}% capacity used
+                </p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">2.3s</div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Avg Response Time</p>
+
+              {/* RON 97 */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">RON 97</span>
+                  <Badge variant={getFuelStatusBadgeVariant(getFuelPercentage(fuelData.ron97.current, fuelData.ron97.max))}>
+                    {getFuelStatusBadge(getFuelPercentage(fuelData.ron97.current, fuelData.ron97.max))}
+                  </Badge>
+                </div>
+                <div className="text-2xl font-bold text-green-600">
+                  {fuelData.ron97.current.toLocaleString()} / {fuelData.ron97.max.toLocaleString()} {fuelData.ron97.unit}
+                </div>
+                <Progress 
+                  value={getFuelPercentage(fuelData.ron97.current, fuelData.ron97.max)} 
+                  className="h-2"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {getFuelPercentage(fuelData.ron97.current, fuelData.ron97.max)}% capacity used
+                </p>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">99.9%</div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Reliability</p>
+
+              {/* DIESEL */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">DIESEL</span>
+                  <Badge variant={getFuelStatusBadgeVariant(getFuelPercentage(fuelData.diesel.current, fuelData.diesel.max))}>
+                    {getFuelStatusBadge(getFuelPercentage(fuelData.diesel.current, fuelData.diesel.max))}
+                  </Badge>
+                </div>
+                <div className="text-2xl font-bold text-orange-600">
+                  {fuelData.diesel.current.toLocaleString()} / {fuelData.diesel.max.toLocaleString()} {fuelData.diesel.unit}
+                </div>
+                <Progress 
+                  value={getFuelPercentage(fuelData.diesel.current, fuelData.diesel.max)} 
+                  className="h-2"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {getFuelPercentage(fuelData.diesel.current, fuelData.diesel.max)}% capacity used
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Stats Grid */}
+      {/* Key Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Overall Rating */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Overall Rating</CardTitle>
+            <Star className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2,847</div>
+            <div className="text-2xl font-bold text-yellow-600">{ratingData.overall}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+12%</span> from last month
+              <span className="text-green-600">+0.2</span> from last month
             </p>
           </CardContent>
         </Card>
 
+        {/* Incidents Opened */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Incidents Opened</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$45,231</div>
+            <div className="text-2xl font-bold text-orange-600">{incidentData.opened}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+20%</span> from last month
+              Last 30 days
             </p>
           </CardContent>
         </Card>
 
+        {/* Incidents Reported */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Sessions</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Incidents Reported</CardTitle>
+            <Clock className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,234</div>
+            <div className="text-2xl font-bold text-blue-600">{incidentData.reported}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+5%</span> from last month
+              Last 30 days
             </p>
           </CardContent>
         </Card>
 
+        {/* Incidents Resolved */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Growth Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Incidents Resolved</CardTitle>
+            <CheckCircle className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">+23.5%</div>
+            <div className="text-2xl font-bold text-green-600">{incidentData.resolved}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+2.1%</span> from last month
+              Last 30 days
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Additional Petrol Station Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Safety Score */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Safety Score</CardTitle>
+            <Shield className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{safetyMetrics.safetyAuditScore}%</div>
+            <p className="text-xs text-muted-foreground">
+              Audit compliance
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Days Without Accident */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Safety Streak</CardTitle>
+            <Target className="h-4 w-4 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">{safetyMetrics.daysWithoutAccident}</div>
+            <p className="text-xs text-muted-foreground">
+              Days without accident
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Customer Traffic */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Daily Customers</CardTitle>
+            <Users className="h-4 w-4 text-purple-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-purple-600">342</div>
+            <p className="text-xs text-muted-foreground">
+              <span className="text-green-600">+8%</span> from yesterday
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Fuel Efficiency */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Fuel Efficiency</CardTitle>
+            <Gauge className="h-4 w-4 text-orange-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">94.2%</div>
+            <p className="text-xs text-muted-foreground">
+              Pump accuracy
             </p>
           </CardContent>
         </Card>
@@ -138,48 +312,49 @@ export default function DashboardContent() {
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        {/* Line Chart */}
+        {/* Fuel Consumption Trend */}
         <Card>
           <CardHeader>
-            <CardTitle>Growth Trends</CardTitle>
+            <CardTitle>Weekly Fuel Consumption</CardTitle>
             <CardDescription>
-              Monthly growth of users, revenue, and sessions
+              Daily fuel consumption trends by type
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
+                <LineChart data={fuelTrendData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="date" />
                   <YAxis />
                   <Tooltip />
-                  <Line type="monotone" dataKey="users" stroke="#3b82f6" strokeWidth={2} name="Users" />
-                  <Line type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2} name="Revenue" />
-                  <Line type="monotone" dataKey="sessions" stroke="#8b5cf6" strokeWidth={2} name="Sessions" />
+                  <Line type="monotone" dataKey="ron95" stroke="#3b82f6" strokeWidth={2} name="RON 95" />
+                  <Line type="monotone" dataKey="ron97" stroke="#10b981" strokeWidth={2} name="RON 97" />
+                  <Line type="monotone" dataKey="diesel" stroke="#f59e0b" strokeWidth={2} name="Diesel" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        {/* Bar Chart */}
+        {/* Revenue Breakdown */}
         <Card>
           <CardHeader>
             <CardTitle>Monthly Revenue</CardTitle>
             <CardDescription>
-              Revenue breakdown by month
+              Revenue breakdown by fuel and shop sales
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData}>
+                <BarChart data={revenueData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="revenue" fill="#10b981" />
+                  <Bar dataKey="fuelSales" fill="#10b981" name="Fuel Sales" />
+                  <Bar dataKey="shopSales" fill="#8b5cf6" name="Shop Sales" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -189,94 +364,111 @@ export default function DashboardContent() {
 
       {/* Main Dashboard Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        {/* Recent Activity */}
+        {/* Recent Incidents */}
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+              <CardTitle>Recent Incidents</CardTitle>
               <CardDescription>
-                Latest updates and system notifications
+                Latest incidents and their current status
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {[
-                  { time: "2 minutes ago", text: "New user registration: john.doe@example.com", type: "success" },
-                  { time: "15 minutes ago", text: "System backup completed successfully", type: "success" },
-                  { time: "1 hour ago", text: "Database maintenance scheduled for tonight", type: "info" },
-                  { time: "2 hours ago", text: "API rate limit warning for endpoint /api/users", type: "warning" },
-                  { time: "4 hours ago", text: "New feature deployment: Advanced Analytics", type: "success" },
-                ].map((activity, index) => (
-                  <div key={index} className="flex items-start space-x-3">
-                    <div className={`w-2 h-2 rounded-full mt-2 ${
-                      activity.type === 'success' ? 'bg-green-500' :
-                      activity.type === 'warning' ? 'bg-yellow-500' :
-                      'bg-blue-500'
-                    }`} />
-                    <div className="flex-1">
-                      <p className="text-sm text-gray-900 dark:text-white">{activity.text}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{activity.time}</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Severity</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Assigned To</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentIncidents.map((incident) => (
+                      <TableRow key={incident.id}>
+                        <TableCell className="font-medium">{incident.type}</TableCell>
+                        <TableCell>
+                          <Badge 
+                            variant={incident.severity === 'High' ? 'destructive' : 
+                                   incident.severity === 'Medium' ? 'secondary' : 'outline'}
+                          >
+                            {incident.severity}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge 
+                            variant={incident.status === 'Resolved' ? 'default' : 
+                                   incident.status === 'In Progress' ? 'secondary' : 'outline'}
+                          >
+                            {incident.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-gray-600 dark:text-gray-400">{incident.date}</TableCell>
+                        <TableCell>{incident.assignedTo}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Quick Actions */}
+        {/* Quick Actions & Safety Metrics */}
         <div className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
               <CardDescription>
-                Common tasks and shortcuts
+                Common station management tasks
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <Button className="w-full justify-start" variant="outline">
-                <Users className="w-4 h-4 mr-2" />
-                Manage Users
+                <Fuel className="w-4 h-4 mr-2" />
+                Check Fuel Levels
               </Button>
               <Button className="w-full justify-start" variant="outline">
-                <BarChart3 className="w-4 h-4 mr-2" />
-                View Analytics
+                <AlertTriangle className="w-4 h-4 mr-2" />
+                Report Incident
               </Button>
               <Button className="w-full justify-start" variant="outline">
                 <Calendar className="w-4 h-4 mr-2" />
-                Schedule Events
+                Schedule Maintenance
               </Button>
               <Button className="w-full justify-start" variant="outline">
-                <Target className="w-4 h-4 mr-2" />
-                Set Goals
+                <Users className="w-4 h-4 mr-2" />
+                Staff Management
               </Button>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>System Status</CardTitle>
+              <CardTitle>Safety Metrics</CardTitle>
               <CardDescription>
-                Current system health and performance
+                Current safety performance indicators
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">CPU Usage</span>
-                  <Badge variant="secondary">45%</Badge>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Safety Audit Score</span>
+                  <Badge variant="default">{safetyMetrics.safetyAuditScore}%</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Memory</span>
-                  <Badge variant="secondary">62%</Badge>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Days Without Accident</span>
+                  <Badge variant="default">{safetyMetrics.daysWithoutAccident}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Storage</span>
-                  <Badge variant="secondary">78%</Badge>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Emergency Drills</span>
+                  <Badge variant="secondary">{safetyMetrics.emergencyDrills}/month</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Network</span>
-                  <Badge variant="secondary">23%</Badge>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Training Hours</span>
+                  <Badge variant="secondary">{safetyMetrics.safetyTrainingHours}h</Badge>
                 </div>
               </div>
             </CardContent>
@@ -284,67 +476,86 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      {/* Table Section */}
-      <div className="mb-8">
+      {/* Additional Petrol Station Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {/* Environmental Compliance */}
         <Card>
           <CardHeader>
-            <CardTitle>User Management</CardTitle>
-            <CardDescription>
-              List of all registered users and their details
-            </CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <Thermometer className="h-5 w-5" />
+              Environmental Compliance
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Last Login</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {tableData.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell className="font-medium">{user.id}</TableCell>
-                      <TableCell>{user.name}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant={user.status === 'Active' ? 'default' : 
-                                 user.status === 'Inactive' ? 'secondary' : 'outline'}
-                          className={user.status === 'Active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                                   user.status === 'Inactive' ? 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200' :
-                                   'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'}
-                        >
-                          {user.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                          {user.role}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-gray-600 dark:text-gray-400">{user.lastLogin}</TableCell>
-                      <TableCell>
-                        <Button variant="ghost" size="sm">
-                          {user.actions}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Air Quality</span>
+                <Badge variant="default">Excellent</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Water Quality</span>
+                <Badge variant="default">Good</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Waste Management</span>
+                <Badge variant="default">Compliant</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Equipment Status */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Zap className="h-5 w-5" />
+              Equipment Status
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Fuel Pumps</span>
+                <Badge variant="default">8/8 Operational</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Payment Systems</span>
+                <Badge variant="default">All Working</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Security Cameras</span>
+                <Badge variant="default">12/12 Active</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Customer Satisfaction */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Star className="h-5 w-5" />
+              Customer Satisfaction
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Overall Rating</span>
+                <Badge variant="default">{ratingData.overall}/5.0</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Customer Service</span>
+                <Badge variant="default">{ratingData.customerService}/5.0</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Cleanliness</span>
+                <Badge variant="default">{ratingData.cleanliness}/5.0</Badge>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
-
-      
     </div>
   );
 } 
