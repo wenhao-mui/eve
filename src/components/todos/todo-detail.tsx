@@ -5,22 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { 
-  Calendar, 
-  User, 
   Paperclip, 
   Edit, 
   Trash2, 
   CheckCircle, 
-  Clock,
-  XCircle,
   AlertTriangle,
   ArrowLeft,
   Download,
   Eye,
   Plus,
-  X
+  X,
+  User,
+  Calendar,
+  Clock,
+  XCircle
 } from "lucide-react";
 import { Todo, TodoStatus } from './todo-list';
 import TodoForm from './todo-form';
@@ -351,7 +351,7 @@ export default function TodoDetail({
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                   <Paperclip className="w-12 h-12 mx-auto mb-3 opacity-50" />
                   <p>No attachments yet</p>
-                  <p className="text-sm">Click "Add Attachment" to upload files</p>
+                  <p className="text-sm">Click &quot;Add Attachment&quot; to upload files</p>
                 </div>
               )}
             </CardContent>
@@ -482,7 +482,7 @@ export default function TodoDetail({
           <DialogHeader>
             <DialogTitle>Delete Todo</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{todo.title}"? This action cannot be undone.
+              Are you sure you want to delete &quot;{todo.title}&quot;? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end space-x-3 pt-4">

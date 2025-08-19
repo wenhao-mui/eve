@@ -15,7 +15,8 @@ import {
   HelpCircle,
   LogOut,
   Folder,
-  CheckSquare
+  CheckSquare,
+  ClipboardList
 } from "lucide-react";
 
 interface SidebarProps {
@@ -29,6 +30,7 @@ const menuItems = [
   { icon: Shield, label: 'Roles', href: '/roles', active: false },
   { icon: Folder, label: 'Documents', href: '/documents', active: false },
   { icon: CheckSquare, label: 'Todos', href: '/todos', active: false },
+  { icon: ClipboardList, label: 'Checklists', href: '/checklists', active: false },
   { icon: Database, label: 'Database', href: '#', active: false },
   { icon: FileText, label: 'Reports', href: '#', active: false },
   { icon: Settings, label: 'Settings', href: '/settings', active: false },

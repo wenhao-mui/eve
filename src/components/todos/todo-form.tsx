@@ -6,9 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+
 import { 
-  Upload, 
   X, 
   File, 
   CheckCircle, 
@@ -88,9 +87,10 @@ export default function TodoForm({ onSubmit, users, onCancel, initialData }: Tod
 
   const getFileIcon = (file: File) => {
     const type = file.type;
+    // eslint-disable-next-line jsx-a11y/alt-text
     if (type.includes('image')) return <Image className="w-6 h-6 text-purple-500" />;
     if (type.includes('video')) return <Video className="w-6 h-6 text-orange-500" />;
-    if (type.includes('audio')) return <Music className="w-6 h-6 text-pink-500" />;
+    if (type.includes('audio')) return <Music className="w-6 h-6 text-purple-500" />;
     if (type.includes('zip') || type.includes('rar') || type.includes('7z')) return <Archive className="w-6 h-6 text-gray-500" />;
     if (type.includes('pdf') || type.includes('document') || type.includes('text')) return <FileText className="w-6 h-6 text-blue-500" />;
     return <File className="w-6 h-6 text-gray-500" />;
