@@ -11,8 +11,7 @@ import {
   TrendingUp, 
   BarChart3, 
   Calendar,
-  Target,
-  CheckCircle
+  Target
 } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
@@ -50,8 +49,36 @@ export default function DashboardContent() {
           Welcome back, Admin
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
-          Here's what's happening with your EVE Portal today.
+          Here&apos;s what&apos;s happening with your EVE Portal today.
         </p>
+      </div>
+
+      {/* Performance Overview Section */}
+      <div className="mb-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Performance Overview</CardTitle>
+            <CardDescription>
+              Key metrics and trends for the last 30 days
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600">98.7%</div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Uptime</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">2.3s</div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Avg Response Time</p>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">99.9%</div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Reliability</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Stats Grid */}
@@ -105,6 +132,57 @@ export default function DashboardContent() {
             <p className="text-xs text-muted-foreground">
               <span className="text-green-600">+2.1%</span> from last month
             </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        {/* Line Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Growth Trends</CardTitle>
+            <CardDescription>
+              Monthly growth of users, revenue, and sessions
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="users" stroke="#3b82f6" strokeWidth={2} name="Users" />
+                  <Line type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2} name="Revenue" />
+                  <Line type="monotone" dataKey="sessions" stroke="#8b5cf6" strokeWidth={2} name="Sessions" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Bar Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Monthly Revenue</CardTitle>
+            <CardDescription>
+              Revenue breakdown by month
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="revenue" fill="#10b981" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -206,57 +284,6 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        {/* Line Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Growth Trends</CardTitle>
-            <CardDescription>
-              Monthly growth of users, revenue, and sessions
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="users" stroke="#3b82f6" strokeWidth={2} name="Users" />
-                  <Line type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2} name="Revenue" />
-                  <Line type="monotone" dataKey="sessions" stroke="#8b5cf6" strokeWidth={2} name="Sessions" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Bar Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Monthly Revenue</CardTitle>
-            <CardDescription>
-              Revenue breakdown by month
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="revenue" fill="#10b981" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Table Section */}
       <div className="mb-8">
         <Card>
@@ -317,33 +344,7 @@ export default function DashboardContent() {
         </Card>
       </div>
 
-      {/* Bottom Section */}
-      <div className="mt-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Performance Overview</CardTitle>
-            <CardDescription>
-              Key metrics and trends for the last 30 days
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">98.7%</div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Uptime</p>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">2.3s</div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Avg Response Time</p>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">99.9%</div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Reliability</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      
     </div>
   );
 } 

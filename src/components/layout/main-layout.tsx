@@ -11,17 +11,13 @@ interface MainLayoutProps {
 export default function MainLayout({ children }: MainLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const handleSidebarToggle = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
   const handleSidebarClose = () => {
     setSidebarOpen(false);
   };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header sidebarOpen={sidebarOpen} setSidebarOpen={handleSidebarToggle} />
+      <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <Sidebar sidebarOpen={sidebarOpen} />
       
       {/* Main Content */}

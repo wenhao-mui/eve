@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { 
   Home,
   Users,
@@ -20,16 +22,18 @@ interface SidebarProps {
 
 // Navigation menu items
 const menuItems = [
-  { icon: Home, label: 'Dashboard', href: '#', active: true },
-  { icon: Users, label: 'Users', href: '#', active: false },
-  { icon: Shield, label: 'Security', href: '#', active: false },
+  { icon: Home, label: 'Dashboard', href: '/', active: true },
+  { icon: Users, label: 'Users', href: '/users', active: false },
+  { icon: Shield, label: 'Roles', href: '/roles', active: false },
   { icon: Database, label: 'Database', href: '#', active: false },
   { icon: FileText, label: 'Reports', href: '#', active: false },
-  { icon: Settings, label: 'Settings', href: '#', active: false },
+  { icon: Settings, label: 'Settings', href: '/settings', active: false },
   { icon: HelpCircle, label: 'Help', href: '#', active: false },
 ];
 
 export default function Sidebar({ sidebarOpen }: SidebarProps) {
+  const pathname = usePathname();
+  
   return (
     <>
       <aside className={`fixed left-0 top-16 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-in-out z-40 ${
@@ -52,20 +56,24 @@ export default function Sidebar({ sidebarOpen }: SidebarProps) {
 
           {/* Navigation Menu */}
           <nav className="space-y-2">
-            {menuItems.map((item) => (
-              <Button
-                key={item.label}
-                variant={item.active ? "default" : "ghost"}
-                className={`w-full justify-start ${
-                  item.active 
-                    ? "bg-blue-600 text-white hover:bg-blue-700" 
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-              >
-                <item.icon className="h-4 w-4 mr-3" />
-                {item.label}
-              </Button>
-            ))}
+            {menuItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link key={item.label} href={item.href}>
+                  <Button
+                    variant={isActive ? "default" : "ghost"}
+                    className={`w-full justify-start ${
+                      isActive 
+                        ? "bg-blue-600 text-white hover:bg-blue-700" 
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    }`}
+                  >
+                    <item.icon className="h-4 w-4 mr-3" />
+                    {item.label}
+                  </Button>
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Bottom Section */}
