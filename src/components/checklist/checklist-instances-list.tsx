@@ -12,40 +12,37 @@ import {
   Edit, 
   Trash2, 
   Calendar,
-  FileText,
+  User,
   CheckCircle,
-  Download,
-  Upload,
+  Clock,
+  AlertTriangle,
   Grid3X3,
   List
 } from 'lucide-react';
-import { ChecklistTemplate } from './checklist-form';
+import { ChecklistInstance } from './checklist-instance';
 
-interface ChecklistListProps {
-  templates: ChecklistTemplate[];
-  onView: (template: ChecklistTemplate) => void;
-  onEdit: (template: ChecklistTemplate) => void;
+interface ChecklistInstancesListProps {
+  instances: ChecklistInstance[];
+  onView: (instance: ChecklistInstance) => void;
+  onEdit: (instance: ChecklistInstance) => void;
   onDelete: (id: string) => void;
   onCreateNew: () => void;
-  onExport: () => void;
-  onImport: (file: File) => void;
 }
 
-export default function ChecklistList({
-  templates,
+export default function ChecklistInstancesList({
+  instances,
   onView,
   onEdit,
   onDelete,
   onCreateNew,
-  onExport,
-  onImport,
-}: ChecklistListProps) {
+}: ChecklistInstancesListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  const filteredTemplates = templates.filter(template =>
-    template.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    template.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredInstances = instances.filter(instance =>
+    instance.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    instance.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    instance.assignedTo.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const formatDate = (dateString: string) => {
@@ -56,13 +53,42 @@ export default function ChecklistList({
     });
   };
 
-  const getCompletionStatus = (template: ChecklistTemplate) => {
-    const totalItems = template.items.length;
-    const mandatoryItems = template.items.filter(item => item.isMandatory).length;
+  const getStatusBadgeVariant = (status: string) => {
+    switch (status) {
+      case 'draft': return 'secondary';
+      case 'in_progress': return 'default';
+      case 'completed': return 'default';
+      case 'submitted': return 'default';
+      default: return 'secondary';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'draft': return <Clock className="h-4 w-4" />;
+      case 'in_progress': return <AlertTriangle className="h-4 w-4" />;
+      case 'completed': return <CheckCircle className="h-4 w-4" />;
+      case 'submitted': return <CheckCircle className="h-4 w-4" />;
+      default: return <Clock className="h-4 w-4" />;
+    }
+  };
+
+  const getCompletionStats = (instance: ChecklistInstance) => {
+    const totalItems = instance.items.length;
+    const completedItems = instance.items.filter(item => item.response !== null).length;
+    const percentage = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
     
-    if (mandatoryItems === 0) return { status: 'No mandatory items', color: 'bg-gray-100 text-gray-800' };
-    if (mandatoryItems === totalItems) return { status: 'All items mandatory', color: 'bg-red-100 text-red-800' };
-    return { status: `${mandatoryItems} mandatory items`, color: 'bg-yellow-100 text-yellow-800' };
+    return {
+      total: totalItems,
+      completed: completedItems,
+      percentage: Math.round(percentage),
+    };
+  };
+
+  const isOverdue = (instance: ChecklistInstance) => {
+    return new Date(instance.dueDate) < new Date() && 
+           instance.status !== 'completed' && 
+           instance.status !== 'submitted';
   };
 
   return (
@@ -71,39 +97,16 @@ export default function ChecklistList({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Checklist Templates
+            Checklist Instances
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Manage and organize your checklist templates
+            View and manage your active checklists
           </p>
         </div>
-        <div className="flex space-x-2">
-          <Button variant="outline" onClick={onExport}>
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-          <input
-            type="file"
-            accept=".json"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) onImport(file);
-            }}
-            className="hidden"
-            id="import-file"
-          />
-          <label
-            htmlFor="import-file"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600 cursor-pointer"
-          >
-            <Upload className="h-4 w-4 mr-2" />
-            Import
-          </label>
-          <Button onClick={onCreateNew} className="bg-blue-600 hover:bg-blue-700">
-            <Plus className="h-4 w-4 mr-2" />
-            Create Template
-          </Button>
-        </div>
+        <Button onClick={onCreateNew} className="bg-blue-600 hover:bg-blue-700">
+          <Plus className="h-4 w-4 mr-2" />
+          Create New Checklist
+        </Button>
       </div>
 
       {/* Search and Filters */}
@@ -111,7 +114,7 @@ export default function ChecklistList({
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
-            placeholder="Search templates..."
+            placeholder="Search checklists..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
@@ -139,24 +142,24 @@ export default function ChecklistList({
         </div>
       </div>
 
-      {/* Templates Display */}
-      {filteredTemplates.length === 0 ? (
+      {/* Instances Display */}
+      {filteredInstances.length === 0 ? (
         <Card className="text-center py-12">
           <CardContent>
-            <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <CheckCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              {searchTerm ? 'No templates found' : 'No checklist templates yet'}
+              {searchTerm ? 'No checklists found' : 'No checklist instances yet'}
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               {searchTerm 
                 ? 'Try adjusting your search terms'
-                : 'Create your first checklist template to get started'
+                : 'Create your first checklist from a template to get started'
               }
             </p>
             {!searchTerm && (
               <Button onClick={onCreateNew} className="bg-blue-600 hover:bg-blue-700">
                 <Plus className="h-4 w-4 mr-2" />
-                Create Template
+                Create New Checklist
               </Button>
             )}
           </CardContent>
@@ -164,20 +167,21 @@ export default function ChecklistList({
       ) : viewMode === 'grid' ? (
         // Grid View
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredTemplates.map((template) => {
-            const completionStatus = getCompletionStatus(template);
+          {filteredInstances.map((instance) => {
+            const stats = getCompletionStats(instance);
+            const overdue = isOverdue(instance);
             
             return (
-              <Card key={template.id} className="hover:shadow-lg transition-shadow duration-200">
+              <Card key={instance.id} className="hover:shadow-lg transition-shadow duration-200">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
                       <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white truncate">
-                        {template.title}
+                        {instance.title}
                       </CardTitle>
-                      {template.description && (
+                      {instance.description && (
                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
-                          {template.description}
+                          {instance.description}
                         </p>
                       )}
                     </div>
@@ -185,21 +189,33 @@ export default function ChecklistList({
                 </CardHeader>
                 
                 <CardContent className="space-y-4">
-                  {/* Stats */}
+                  {/* Status and Progress */}
                   <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
-                      <CheckCircle className="h-4 w-4" />
-                      <span>{template.items.length} items</span>
+                    <div className="flex items-center space-x-2">
+                      {getStatusIcon(instance.status)}
+                      <Badge variant={getStatusBadgeVariant(instance.status)}>
+                        {instance.status.replace('_', ' ')}
+                      </Badge>
                     </div>
-                    <Badge variant="secondary" className={completionStatus.color}>
-                      {completionStatus.status}
-                    </Badge>
+                    <div className="text-right">
+                      <div className="font-medium">{stats.completed}/{stats.total}</div>
+                      <div className="text-xs text-gray-500">{stats.percentage}%</div>
+                    </div>
                   </div>
 
-                  {/* Dates */}
-                  <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
+                  {/* Assignment */}
+                  <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                    <User className="h-4 w-4" />
+                    <span>{instance.assignedTo}</span>
+                  </div>
+
+                  {/* Due Date */}
+                  <div className="flex items-center space-x-2 text-xs">
                     <Calendar className="h-3 w-3" />
-                    <span>Updated {formatDate(template.updatedAt)}</span>
+                    <span className={overdue ? 'text-red-500 font-medium' : 'text-gray-500 dark:text-gray-400'}>
+                      Due {formatDate(instance.dueDate)}
+                      {overdue && ' (Overdue)'}
+                    </span>
                   </div>
 
                   {/* Actions */}
@@ -207,25 +223,27 @@ export default function ChecklistList({
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => onView(template)}
+                      onClick={() => onView(instance)}
                       className="flex-1"
                     >
                       <Eye className="h-4 w-4 mr-1" />
                       View
                     </Button>
+                    {instance.status !== 'submitted' && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onEdit(instance)}
+                        className="flex-1"
+                      >
+                        <Edit className="h-4 w-4 mr-1" />
+                        Edit
+                      </Button>
+                    )}
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => onEdit(template)}
-                      className="flex-1"
-                    >
-                      <Edit className="h-4 w-4 mr-1" />
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onDelete(template.id)}
+                      onClick={() => onDelete(instance.id)}
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -239,27 +257,28 @@ export default function ChecklistList({
       ) : (
         // List View
         <div className="space-y-3">
-          {filteredTemplates.map((template) => {
-            const completionStatus = getCompletionStatus(template);
+          {filteredInstances.map((instance) => {
+            const stats = getCompletionStats(instance);
+            const overdue = isOverdue(instance);
             
             return (
-              <Card key={template.id} className="hover:shadow-md transition-shadow duration-200">
+              <Card key={instance.id} className="hover:shadow-md transition-shadow duration-200">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-3">
                         <div className="flex-shrink-0">
                           <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
-                            <CheckCircle className="w-5 h-5 text-blue-600" />
+                            {getStatusIcon(instance.status)}
                           </div>
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
-                            {template.title}
+                            {instance.title}
                           </h3>
-                          {template.description && (
+                          {instance.description && (
                             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-1">
-                              {template.description}
+                              {instance.description}
                             </p>
                           )}
                         </div>
@@ -267,28 +286,41 @@ export default function ChecklistList({
                     </div>
                     
                     <div className="flex items-center space-x-6">
-                      {/* Stats */}
+                      {/* Progress */}
                       <div className="text-center">
                         <div className="text-sm font-medium text-gray-900 dark:text-white">
-                          {template.items.length}
+                          {stats.completed}/{stats.total}
                         </div>
                         <div className="text-xs text-gray-500 dark:text-gray-400">Items</div>
                       </div>
                       
                       {/* Status */}
                       <div className="text-center">
-                        <Badge variant="secondary" className={completionStatus.color}>
-                          {completionStatus.status}
+                        <Badge variant={getStatusBadgeVariant(instance.status)}>
+                          {instance.status.replace('_', ' ')}
                         </Badge>
                       </div>
                       
-                      {/* Date */}
+                      {/* Assignment */}
                       <div className="text-center">
                         <div className="text-xs text-gray-500 dark:text-gray-400">
-                          Updated
+                          Assigned To
                         </div>
                         <div className="text-sm font-medium text-gray-900 dark:text-white">
-                          {formatDate(template.updatedAt)}
+                          {instance.assignedTo}
+                        </div>
+                      </div>
+                      
+                      {/* Due Date */}
+                      <div className="text-center">
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          Due Date
+                        </div>
+                        <div className={`text-sm font-medium ${
+                          overdue ? 'text-red-500' : 'text-gray-900 dark:text-white'
+                        }`}>
+                          {formatDate(instance.dueDate)}
+                          {overdue && ' (Overdue)'}
                         </div>
                       </div>
                       
@@ -297,23 +329,25 @@ export default function ChecklistList({
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => onView(template)}
+                          onClick={() => onView(instance)}
                         >
                           <Eye className="h-4 w-4 mr-1" />
                           View
                         </Button>
+                        {instance.status !== 'submitted' && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => onEdit(instance)}
+                          >
+                            <Edit className="h-4 w-4 mr-1" />
+                            Edit
+                          </Button>
+                        )}
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => onEdit(template)}
-                        >
-                          <Edit className="h-4 w-4 mr-1" />
-                          Edit
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => onDelete(template.id)}
+                          onClick={() => onDelete(instance.id)}
                           className="text-red-600 hover:text-red-700 hover:bg-red-50"
                         >
                           <Trash2 className="h-4 w-4" />
