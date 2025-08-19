@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CheckCircle, Menu, Search, Bell } from "lucide-react";
+import { CheckCircle, Menu, Search } from "lucide-react";
+import NotificationDropdown from "@/components/notifications/notification-dropdown";
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -52,10 +53,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps) {
             Online
           </Badge>
           
-          <Button variant="ghost" size="sm" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
-          </Button>
+          <NotificationDropdown />
           
           <Avatar className="cursor-pointer">
             <AvatarImage src="/placeholder-avatar.jpg" />
