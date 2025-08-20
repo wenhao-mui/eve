@@ -16,7 +16,8 @@ import {
   LogOut,
   Folder,
   CheckSquare,
-  ClipboardList
+  ClipboardList,
+  Fuel
 } from "lucide-react";
 
 interface SidebarProps {
@@ -33,6 +34,7 @@ const menuItems = [
   { icon: ClipboardList, label: 'Checklist Templates', href: '/checklists', active: false },
   { icon: CheckSquare, label: 'Checklist Forms', href: '/checklist-instances', active: false },
   { icon: FileText, label: 'Checklist Reports', href: '/checklist-reports', active: false },
+  { icon: Fuel, label: 'Petrol Stations', href: '/petrol-stations', active: false },
   { icon: Database, label: 'Database', href: '#', active: false },
   { icon: FileText, label: 'Reports', href: '#', active: false },
   { icon: Settings, label: 'Settings', href: '/settings', active: false },
